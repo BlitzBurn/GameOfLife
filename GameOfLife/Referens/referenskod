@@ -1,0 +1,129 @@
+import java.util.*;
+
+public class GOL{
+public static void main(String[] args){
+
+int gens = Integer.parseInt(args[0]);
+int line_nr = Integer.parseInt(args[1]);
+
+List<String> temp = new ArrayList<String>();
+System.out.println("Please enter a rectangular board with "+args[1]+" rows");
+Scanner in = new Scanner(System.in);
+
+
+  for (int i = 0; i < line_nr; i++){
+    temp.add(in.nextLine());
+  }
+
+in.close();
+String[] dish = new String[ temp.size() ];
+temp.toArray( dish );
+String[] dish_old; // needed to check for termination of the game
+
+// verify if input correct
+if (dish[0].length() < 2){
+System.out.println("Board is too small.\n");
+return;
+}
+     for (String i : dish){
+      if (i.length() != dish[0].length()) {
+        System.out.println("Board is not a rectangle.\n");
+        return;
+      }
+    }
+       
+// simulate generations
+for(int i= 0;i < gens;i++){
+  System.out.println("Generation " + i + ":");
+  print(dish);
+  dish_old = dish;
+
+  dish = life(dish);
+  int terminated = compare (dish_old, dish);
+  if (terminated == 1) {
+    print(dish);
+    System.out.println("End of game, still life is reached.\n");
+    return;
+  }
+    if (terminated == 2) {
+      print(dish);
+        System.out.println("End of game, all organisms are dead.\n");
+        return;
+    }
+}
+
+print(dish);
+}
+//End of main class
+
+
+
+public static int compare(String[] dish_old, String[] dish_new){
+
+  for(int i=0; i<dish_old.length; i++){
+// at least one difference in the boards
+    if (!dish_old[i].equals(dish_new[i])) return 0;
+
+  }
+  // the boards are the same
+  for(int i=0; i<dish_new.length; i++){
+    for (char j : dish_new[i].toCharArray()){
+      // the boards are the same and the new board is not empty -> still life
+      if (j == 'x') return 1;
+    }
+  }
+// the boards are the same and they are empty -> all organisms are dead
+return 2;
+}
+
+
+public static String[] life(String[] dish){
+
+String[] newGen= new String[dish.length];
+String[] newtemp= new String[dish.length];
+
+ 
+int rowx=0;
+int rowy=0;
+int neighbors = 0;
+
+int nboard[][]=new int [dish.length][dish.length];
+int board[][]=new int[dish.length][dish.length];
+
+System.out.println("this is dish 0 "+dish[0]);
+
+  for (int i=0; i<dish.length; i++) {
+
+      if (board[rowx][rowy]==1) neighbors++;
+      if (board[rowx][rowy]==1) neighbors++;
+      if (board[rowx][rowy+1]==1) neighbors++;
+   
+      if (board[rowx][rowy]==1) neighbors++;
+      if (board[rowx][rowy+1]==1) neighbors++;
+  
+      if (board[rowx+1][rowy]==1) neighbors++;
+      if (board[rowx+1][rowy]==1) neighbors++;
+      if (board[rowx+1][rowy]==1) neighbors++;
+
+  }
+
+  if ((board[rowx][rowy]==1) && neighbors < 2 ) nboard[rowx][rowy]=0;
+
+  else if ((board[rowx][rowy]==1) && neighbors > 3 ) nboard[rowx][rowy]=0;
+
+  else if ((board[rowx][rowy]==0) && neighbors == 3 ) nboard[rowx][rowy]=1;
+
+  else nboard[rowx][rowy]=board[rowx][rowy];
+
+    board=nboard;
+
+    return newGen;
+  }
+
+  public static void print(String[] dish){
+
+    for(String s: dish){
+    System.out.println(s);
+    }
+  }
+}
